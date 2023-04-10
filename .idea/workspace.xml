@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2ad446d-6816-43dc-9488-95760cf8acf6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/page.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/Cart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Cart.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="7ktbdbj9" />
@@ -24,10 +29,17 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "13.empty-cart",
     "last_opened_file_path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "AndroidSdkUpdater",
+    "prettierjs.PrettierConfiguration.Package": "/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier",
+    "settings.editor.selected.configurable": "actions.on.save",
     "ts.external.directory.path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -41,6 +53,8 @@
       <option name="presentableId" value="Default" />
       <updated>1681092870580</updated>
       <workItem from="1681092871771" duration="197000" />
+      <workItem from="1681097626188" duration="31000" />
+      <workItem from="1681097662058" duration="913000" />
     </task>
     <servers />
   </component>
