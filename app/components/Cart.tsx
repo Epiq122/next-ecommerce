@@ -7,6 +7,7 @@ import { IoAddCircle } from 'react-icons/io5';
 import { IoRemoveCircle } from 'react-icons/io5';
 import purchase from '@/public/purchase.png';
 import { AnimatePresence, motion } from 'framer-motion';
+import Checkout from './Checkout';
 
 export default function Cart() {
   const cartStore = useCartStore();
@@ -36,54 +37,69 @@ export default function Cart() {
         >
           Back to Store 🏃🏼
         </button>
-        {cartStore.cart.map((item) => (
-          <motion.div layout key={item.id} className='flex py-4 gap-4'>
-            <Image src={item.image} alt={item.name} width={120} height={120} />
-            <div>
-              <h2>{item.name}</h2>
-              <div className='flex gap-2 text-lg'>
-                <button
-                  onClick={() =>
-                    cartStore.removeProduct({
-                      id: item.id,
-                      image: item.image,
-                      name: item.name,
-                      unit_amount: item.unit_amount,
-                      quantity: item.quantity,
-                    })
-                  }
-                >
-                  <IoRemoveCircle />
-                </button>
-                <button
-                  onClick={() =>
-                    cartStore.addProduct({
-                      id: item.id,
-                      image: item.image,
-                      name: item.name,
-                      unit_amount: item.unit_amount,
-                      quantity: item.quantity,
-                    })
-                  }
-                >
-                  <IoAddCircle />
-                </button>
-              </div>
-              <h2>Quantity: {item.quantity}</h2>
-              <p className='text-sm'>
-                {item.unit_amount && formatPrice(item.unit_amount)}
-              </p>
-            </div>
-          </motion.div>
-        ))}
+        {/* Cart items */}
+        {cartStore.onCheckout === 'cart' && (
+          <>
+            {cartStore.cart.map((item) => (
+              <motion.div layout key={item.id} className='flex py-4 gap-4'>
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={120}
+                  height={120}
+                />
+                <div>
+                  <h2>{item.name}</h2>
+                  <div className='flex gap-2 text-lg'>
+                    <button
+                      onClick={() =>
+                        cartStore.removeProduct({
+                          id: item.id,
+                          image: item.image,
+                          name: item.name,
+                          unit_amount: item.unit_amount,
+                          quantity: item.quantity,
+                        })
+                      }
+                    >
+                      <IoRemoveCircle />
+                    </button>
+                    <button
+                      onClick={() =>
+                        cartStore.addProduct({
+                          id: item.id,
+                          image: item.image,
+                          name: item.name,
+                          unit_amount: item.unit_amount,
+                          quantity: item.quantity,
+                        })
+                      }
+                    >
+                      <IoAddCircle />
+                    </button>
+                  </div>
+                  <h2>Quantity: {item.quantity}</h2>
+                  <p className='text-sm'>
+                    {item.unit_amount && formatPrice(item.unit_amount)}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </>
+        )}
         {/* Checkout and Total */}
         <motion.div layout>
           <p>Total: {formatPrice(totalPrice)}</p>
           {cartStore.cart.length > 0 && (
-            <button className='py-2 mt-4 bg-teal-700 w-full rounded-md text-white '>
+            <button
+              onClick={() => cartStore.setCheckout('checkout')}
+              className='py-2 mt-4 bg-teal-700 w-full rounded-md text-white '
+            >
               Checkout
             </button>
           )}
+          {/* checkout form */}
+          {cartStore.onCheckout === 'checkout' && <Checkout />}
         </motion.div>
         <AnimatePresence>
           {!cartStore.cart.length && (
