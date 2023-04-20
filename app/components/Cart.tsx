@@ -8,6 +8,7 @@ import { IoRemoveCircle } from 'react-icons/io5';
 import purchase from '@/public/purchase.png';
 import { AnimatePresence, motion } from 'framer-motion';
 import Checkout from './Checkout';
+import OrderConfirmed from './OrderConfirmed';
 
 export default function Cart() {
   const cartStore = useCartStore();
@@ -112,8 +113,9 @@ export default function Cart() {
         ) : null}
         {/* checkout form */}
         {cartStore.onCheckout === 'checkout' && <Checkout />}
+        {cartStore.onCheckout === 'success' && <OrderConfirmed />}
         <AnimatePresence>
-          {!cartStore.cart.length && (
+          {!cartStore.cart.length && cartStore.onCheckout === 'cart' ? (
             <motion.div
               animate={{ scale: 1, rotateZ: 0, opacity: 0.75 }}
               initial={{ scale: 0.5, rotateZ: -10, opacity: 0 }}
@@ -123,7 +125,7 @@ export default function Cart() {
               <h1>Cart is Empty...</h1>
               <Image src={purchase} alt='empty cart' width={200} height={200} />
             </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </motion.div>
     </motion.div>
