@@ -1,26 +1,29 @@
-'use-client';
+"use-client";
 
-import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import { useCartStore } from '@/store';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import CheckoutForm from './CheckoutForm';
+import OrderAnimation from "@/app/components/OrderAnimation";
+import { motion } from "framer-motion";
+
+import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { useCartStore } from "@/store";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import CheckoutForm from "./CheckoutForm";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
 export default function Checkout() {
   const cartStore = useCartStore();
   const router = useRouter();
-  const [clientSecret, setClientSecret] = useState('');
+  const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
     // create a payment intent as soon as page loads up
-    fetch('/api/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("/api/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         items: cartStore.cart,
         payment_intent_id: cartStore.paymentIntent,
@@ -28,7 +31,7 @@ export default function Checkout() {
     })
       .then((res) => {
         if (res.status === 403) {
-          return router.push('/api/auth/signin');
+          return router.push("/api/auth/signin");
         }
         return res.json();
       })
@@ -41,19 +44,20 @@ export default function Checkout() {
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
-      theme: 'stripe',
-      labels: 'floating',
+      theme: "stripe",
+      labels: "floating",
     },
   };
 
   return (
     <div>
+      {!clientSecret && <OrderAnimation />}
       {clientSecret && (
-        <div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Elements options={options} stripe={stripePromise}>
             <CheckoutForm clientSecret={clientSecret} />
           </Elements>
-        </div>
+        </motion.div>
       )}
     </div>
   );

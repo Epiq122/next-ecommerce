@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2ad446d-6816-43dc-9488-95760cf8acf6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/components/OrderAnimation.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/Nav.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Nav.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/orders.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Checkout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +20,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -34,6 +36,10 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
+                    <option name="branchName" value="24.lottie-animations" />
+                    <option name="lastUsedInstant" value="1682139327" />
+                  </RecentBranch>
+                  <RecentBranch>
                     <option name="branchName" value="main" />
                     <option name="lastUsedInstant" value="1682128990" />
                   </RecentBranch>
@@ -48,10 +54,6 @@
                   <RecentBranch>
                     <option name="branchName" value="14.adding-google-fonts" />
                     <option name="lastUsedInstant" value="1681099217" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="13.empty-cart" />
-                    <option name="lastUsedInstant" value="1681099216" />
                   </RecentBranch>
                 </list>
               </option>
@@ -73,25 +75,25 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rob/Desktop/Next/FullStackNext/next-ecommerce&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "24.lottie-animations",
+    "last_opened_file_path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -105,7 +107,7 @@
       <workItem from="1681097662058" duration="1770000" />
       <workItem from="1682047330697" duration="2870000" />
       <workItem from="1682051807987" duration="2006000" />
-      <workItem from="1682136056831" duration="3000000" />
+      <workItem from="1682136056831" duration="4180000" />
     </task>
     <servers />
   </component>
