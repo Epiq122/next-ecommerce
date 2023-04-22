@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2ad446d-6816-43dc-9488-95760cf8acf6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/api/webhooks.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/api/orders.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/webhooks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/webhooks.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +33,14 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1682128990" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="24.dashboard-creation" />
+                    <option name="lastUsedInstant" value="1682051904" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="23.stripe-webhook" />
                     <option name="lastUsedInstant" value="1682047627" />
@@ -72,7 +79,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "23.stripe-webhook",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -80,7 +87,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier",
-    "settings.editor.selected.configurable": "actions.on.save",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -97,6 +104,7 @@
       <workItem from="1681097626188" duration="31000" />
       <workItem from="1681097662058" duration="1770000" />
       <workItem from="1682047330697" duration="2870000" />
+      <workItem from="1682051807987" duration="1528000" />
     </task>
     <servers />
   </component>
