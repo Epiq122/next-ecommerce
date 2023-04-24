@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   PaymentElement,
   useStripe,
   useElements,
-} from '@stripe/react-stripe-js';
-import formatPrice from '@/util/PriceFormat';
-import { useCartStore } from '@/store';
+} from "@stripe/react-stripe-js";
+import formatPrice from "@/util/PriceFormat";
+import { useCartStore } from "@/store";
 
 export default function CheckoutForm({
   clientSecret,
@@ -43,26 +43,26 @@ export default function CheckoutForm({
     stripe
       .confirmPayment({
         elements,
-        redirect: 'if_required',
+        redirect: "if_required",
       })
       .then((result) => {
         if (!result.error) {
-          cartStore.setCheckout('success');
+          cartStore.setCheckout("success");
         }
         setIsLoading(false);
       });
   };
 
   return (
-    <form className='text-gray-600' onSubmit={handleSubmit} id='payment-form'>
-      <PaymentElement id='payment-element' options={{ layout: 'tabs' }} />
-      <h2 className='py-4 text-sm font-bold'>Total: {formattedPrice}</h2>
+    <form className="text-gray-600" onSubmit={handleSubmit} id="payment-form">
+      <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
+      <h2 className="py-4 text-sm font-bold">Total: {formattedPrice}</h2>
       <button
-        className='py-2 mt-4 w-full bg-teal-700 rounded-md text-white disabled:opacity-25'
-        id='submit'
+        className="py-2 mt-4 w-full bg-primary rounded-md text-white disabled:opacity-25"
+        id="submit"
         disabled={isLoading || !stripe || !elements}
       >
-        <span id='button-text'>
+        <span id="button-text">
           {isLoading ? <span>Processing 👀 </span> : <span>Pay Now 🔥  </span>}
         </span>
       </button>

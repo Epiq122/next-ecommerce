@@ -1,6 +1,6 @@
 "use-client";
 
-import OrderAnimation from "@/app/components/OrderAnimation";
+import OrderAnimation from "../components/OrderAnimation";
 import { motion } from "framer-motion";
 
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";

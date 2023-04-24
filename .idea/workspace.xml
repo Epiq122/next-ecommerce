@@ -5,11 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2ad446d-6816-43dc-9488-95760cf8acf6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/components/OrderAnimation.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/Cart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Cart.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/components/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Checkout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/CheckoutForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/CheckoutForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/Nav.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Nav.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/Product.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Product.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/product/[id]/AddCart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/product/[id]/AddCart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/product/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/product/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,12 +44,16 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="24.lottie-animations" />
-                    <option name="lastUsedInstant" value="1682139327" />
+                    <option name="branchName" value="25.daisy-ui-implementation" />
+                    <option name="lastUsedInstant" value="1682301111" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1682128990" />
+                    <option name="lastUsedInstant" value="1682140304" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="24.lottie-animations" />
+                    <option name="lastUsedInstant" value="1682139327" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="24.dashboard-creation" />
@@ -50,10 +62,6 @@
                   <RecentBranch>
                     <option name="branchName" value="23.stripe-webhook" />
                     <option name="lastUsedInstant" value="1682047627" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="14.adding-google-fonts" />
-                    <option name="lastUsedInstant" value="1681099217" />
                   </RecentBranch>
                 </list>
               </option>
@@ -81,7 +89,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "24.lottie-animations",
+    "git-widget-placeholder": "25.daisy-ui-implementation",
     "last_opened_file_path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -107,7 +115,8 @@
       <workItem from="1681097662058" duration="1770000" />
       <workItem from="1682047330697" duration="2870000" />
       <workItem from="1682051807987" duration="2006000" />
-      <workItem from="1682136056831" duration="4180000" />
+      <workItem from="1682136056831" duration="4964000" />
+      <workItem from="1682295075807" duration="2752000" />
     </task>
     <servers />
   </component>
