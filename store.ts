@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { AddCartType } from './types/AddCartType';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { AddCartType } from "./types/AddCartType";
 
 type CartState = {
   isOpen: boolean;
@@ -20,14 +20,14 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       cart: [],
       isOpen: false,
-      paymentIntent: '',
-      onCheckout: 'cart',
+      paymentIntent: "",
+      onCheckout: "cart",
 
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       addProduct: (item) =>
         set((state) => {
           const existingItem = state.cart.find(
-            (cartItem) => cartItem.id === item.id,
+            (cartItem) => cartItem.id === item.id
           );
           if (existingItem) {
             const updatedCart = state.cart.map((cartItem) => {
@@ -46,7 +46,7 @@ export const useCartStore = create<CartState>()(
         // check if item exists and remove quantity -1
         set((state) => {
           const existingItem = state.cart.find(
-            (cartItem) => cartItem.id === item.id,
+            (cartItem) => cartItem.id === item.id
           );
           if (existingItem && existingItem.quantity! > 1) {
             const updatedCart = state.cart.map((cartItem) => {
@@ -59,7 +59,7 @@ export const useCartStore = create<CartState>()(
           } else {
             // remove item from cart
             const filteredCart = state.cart.filter(
-              (cartItem) => cartItem.id !== item.id,
+              (cartItem) => cartItem.id !== item.id
             );
             return { cart: filteredCart };
           }
@@ -68,6 +68,19 @@ export const useCartStore = create<CartState>()(
       setCheckout: (val) => set((state) => ({ onCheckout: val })),
       clearCart: () => set((state) => ({ cart: [] })),
     }),
-    { name: 'cart-store' },
-  ),
+    { name: "cart-store" }
+  )
+);
+type ThemeState = {
+  mode: "light" | "dark";
+  toggleMode: (theme: "light" | "dark") => void;
+};
+export const useThemeStore = create<ThemeState>()(
+  persist(
+    (set) => ({
+      mode: "light",
+      toggleMode: (theme) => set((state) => ({ mode: theme })),
+    }),
+    { name: "theme-store" }
+  )
 );
