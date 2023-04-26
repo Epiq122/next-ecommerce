@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2ad446d-6816-43dc-9488-95760cf8acf6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/util/prisma.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/Product.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Product.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/product/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/product/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/auth/[...nextauth].ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/auth/[...nextauth].ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/create-payment-intent.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/create-payment-intent.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/webhooks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/webhooks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,12 +34,12 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="30.quick-fixes" />
-                    <option name="lastUsedInstant" value="1682475649" />
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1682476653" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1682398748" />
+                    <option name="branchName" value="30.quick-fixes" />
+                    <option name="lastUsedInstant" value="1682475649" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="29.more-fonts" />
@@ -84,7 +79,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "30.quick-fixes",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -113,7 +108,7 @@
       <workItem from="1682136056831" duration="4964000" />
       <workItem from="1682295075807" duration="2955000" />
       <workItem from="1682306097191" duration="2911000" />
-      <workItem from="1682394535303" duration="5309000" />
+      <workItem from="1682394535303" duration="5713000" />
     </task>
     <servers />
   </component>
