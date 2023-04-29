@@ -1,0 +1,135 @@
+Index: prisma/schema.prisma
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>generator client {\n  provider = \"prisma-client-js\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Account {\n  id                 String  @id @default(cuid())\n  userId             String\n  type               String\n  provider           String\n  providerAccountId  String\n  refresh_token      String?  @db.Text\n  access_token       String?  @db.Text\n  expires_at         Int?\n  token_type         String?\n  scope              String?\n  id_token           String?  @db.Text\n  session_state      String?\n\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([provider, providerAccountId])\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  email         String?   @unique\n  emailVerified DateTime?\n  image         String?\n  accounts      Account[]\n  sessions      Session[]\n  stripeCustomerId String?\n  orders Order[]\n\n\n\n}\nmodel Product{\n  id String @id @default(cuid())\n  name String\n  description String?\n  unit_amount Float\n  image String?\n  quantity Float @default(0)\n  orders Order[]\n}\n\nmodel Order {\n  id String @id @default(cuid())\n  user User @relation(fields: [userId],references: [id])\n  userId String\n  amount Float\n  currency String\n  status String\n  createdDate DateTime @default(now())\n   paymentIntentID String? @unique\n  products Product[]\n}\n\nmodel VerificationToken {\n  identifier String\n  token      String   @unique\n  expires    DateTime\n\n  @@unique([identifier, token])\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/prisma/schema.prisma b/prisma/schema.prisma
+--- a/prisma/schema.prisma	
++++ b/prisma/schema.prisma	
+@@ -1,25 +1,59 @@
+-generator client {
+-  provider = "prisma-client-js"
+-}
+-
+ datasource db {
+   provider = "postgresql"
+   url      = env("DATABASE_URL")
+ }
+ 
++generator client {
++  provider = "prisma-client-js"
++}
++
++model User {
++  id               String    @id @default(cuid())
++  name             String?
++  email            String?   @unique
++  emailVerified    DateTime?
++  image            String?
++  accounts         Account[]
++  sessions         Session[]
++  stripeCustomerId String?
++  orders           Order[]
++}
++
++model Order {
++  id              String    @id @default(cuid())
++  user            User      @relation(fields: [userId], references: [id])
++  userId          String
++  amount          Float
++  currency        String
++  status          String
++  createdDate     DateTime  @default(now())
++  paymentIntentID String?   @unique
++  products        Product[]
++}
++
++model Product {
++  id          String  @id @default(cuid())
++  name        String
++  description String?
++  unit_amount Float
++  image       String?
++  quantity    Float   @default(0)
++  orders      Order[]
++}
++
+ model Account {
+-  id                 String  @id @default(cuid())
+-  userId             String
+-  type               String
+-  provider           String
+-  providerAccountId  String
+-  refresh_token      String?  @db.Text
+-  access_token       String?  @db.Text
+-  expires_at         Int?
+-  token_type         String?
+-  scope              String?
+-  id_token           String?  @db.Text
+-  session_state      String?
++  id                String  @id @default(cuid())
++  userId            String
++  type              String
++  provider          String
++  providerAccountId String
++  refresh_token     String? @db.Text
++  access_token      String? @db.Text
++  expires_at        Int?
++  token_type        String?
++  scope             String?
++  id_token          String? @db.Text
++  session_state     String?
+ 
+   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+@@ -34,46 +68,10 @@
+   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ }
+ 
+-model User {
+-  id            String    @id @default(cuid())
+-  name          String?
+-  email         String?   @unique
+-  emailVerified DateTime?
+-  image         String?
+-  accounts      Account[]
+-  sessions      Session[]
+-  stripeCustomerId String?
+-  orders Order[]
+-
+-
+-
+-}
+-model Product{
+-  id String @id @default(cuid())
+-  name String
+-  description String?
+-  unit_amount Float
+-  image String?
+-  quantity Float @default(0)
+-  orders Order[]
+-}
+-
+-model Order {
+-  id String @id @default(cuid())
+-  user User @relation(fields: [userId],references: [id])
+-  userId String
+-  amount Float
+-  currency String
+-  status String
+-  createdDate DateTime @default(now())
+-   paymentIntentID String? @unique
+-  products Product[]
+-}
+-
+ model VerificationToken {
+   identifier String
+   token      String   @unique
+   expires    DateTime
+ 
+   @@unique([identifier, token])
+-}
+\ No newline at end of file
++}

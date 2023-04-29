@@ -12,7 +12,7 @@ const fetchOrders = async () => {
     return null;
   }
   const orders = await prisma.order.findMany({
-    where: { userId: user?.user?.id, status: "complete" },
+    where: { userId: user?.user?.id, status: "Complete" },
     include: { products: true },
   });
   return orders;
@@ -40,7 +40,7 @@ export default async function Dashboard() {
               Status:{" "}
               <span
                 className={`${
-                  order.status === "complete" ? "bg-teal-500" : "bg-orange-500"
+                  order.status === "Complete" ? "bg-teal-500" : "bg-orange-500"
                 } text-white px-2 py-1 rounded-md mx-2 px-2 text-xs`}
               >
                 {order.status}

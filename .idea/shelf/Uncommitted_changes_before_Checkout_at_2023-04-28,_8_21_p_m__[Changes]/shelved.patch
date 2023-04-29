@@ -1,0 +1,428 @@
+Index: store.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { create } from \"zustand\";\nimport { persist } from \"zustand/middleware\";\nimport { AddCartType } from \"./types/AddCartType\";\n\ntype CartState = {\n  isOpen: boolean;\n  cart: AddCartType[];\n  toggleCart: () => void;\n  clearCart: () => void;\n  addProduct: (item: AddCartType) => void;\n  removeProduct: (item: AddCartType) => void;\n  paymentIntent: string;\n  setPaymentIntent: (val: string) => void;\n  onCheckout: string;\n  setCheckout: (val: string) => void;\n};\n\nexport const useCartStore = create<CartState>()(\n  persist(\n    (set) => ({\n      cart: [],\n      isOpen: false,\n      paymentIntent: \"\",\n      onCheckout: \"cart\",\n\n      toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),\n      addProduct: (item) =>\n        set((state) => {\n          const existingItem = state.cart.find(\n            (cartItem) => cartItem.id === item.id\n          );\n          if (existingItem) {\n            const updatedCart = state.cart.map((cartItem) => {\n              if (cartItem.id === item.id) {\n                const quantity = cartItem.quantity ?? 0;\n                return { ...cartItem, quantity: quantity + 1 };\n              }\n              return cartItem;\n            });\n            return { cart: updatedCart };\n          } else {\n            return { cart: [...state.cart, { ...item, quantity: 1 }] };\n          }\n        }),\n      removeProduct: (item) =>\n        // check if item exists and remove quantity -1\n        set((state) => {\n          const existingItem = state.cart.find(\n            (cartItem) => cartItem.id === item.id\n          );\n          if (existingItem && existingItem.quantity! > 1) {\n            const updatedCart = state.cart.map((cartItem) => {\n              if (cartItem.id === item.id) {\n                return { ...cartItem, quantity: cartItem.quantity! - 1 };\n              }\n              return cartItem;\n            });\n            return { cart: updatedCart };\n          } else {\n            // remove item from cart\n            const filteredCart = state.cart.filter(\n              (cartItem) => cartItem.id !== item.id\n            );\n            return { cart: filteredCart };\n          }\n        }),\n      setPaymentIntent: (val) => set((state) => ({ paymentIntent: val })),\n      setCheckout: (val) => set((state) => ({ onCheckout: val })),\n      clearCart: () => set((state) => ({ cart: [] })),\n    }),\n    { name: \"cart-store\" }\n  )\n);\ntype ThemeState = {\n  mode: \"light\" | \"dark\";\n  toggleMode: (theme: \"light\" | \"dark\") => void;\n};\nexport const useThemeStore = create<ThemeState>()(\n  persist(\n    (set) => ({\n      mode: \"light\",\n      toggleMode: (theme) => set((state) => ({ mode: theme })),\n    }),\n    { name: \"theme-store\" }\n  )\n);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/store.ts b/store.ts
+--- a/store.ts	
++++ b/store.ts	
+@@ -10,8 +10,8 @@
+   addProduct: (item: AddCartType) => void;
+   removeProduct: (item: AddCartType) => void;
+   paymentIntent: string;
+-  setPaymentIntent: (val: string) => void;
+   onCheckout: string;
++  setPaymentIntent: (val: string) => void;
+   setCheckout: (val: string) => void;
+ };
+ 
+@@ -22,7 +22,6 @@
+       isOpen: false,
+       paymentIntent: "",
+       onCheckout: "cart",
+-
+       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+       addProduct: (item) =>
+         set((state) => {
+@@ -32,8 +31,7 @@
+           if (existingItem) {
+             const updatedCart = state.cart.map((cartItem) => {
+               if (cartItem.id === item.id) {
+-                const quantity = cartItem.quantity ?? 0;
+-                return { ...cartItem, quantity: quantity + 1 };
++                return { ...cartItem, quantity: cartItem.quantity! + 1 };
+               }
+               return cartItem;
+             });
+@@ -43,8 +41,8 @@
+           }
+         }),
+       removeProduct: (item) =>
+-        // check if item exists and remove quantity -1
+         set((state) => {
++          //Check if the item exists and remove quantity - 1
+           const existingItem = state.cart.find(
+             (cartItem) => cartItem.id === item.id
+           );
+@@ -57,7 +55,7 @@
+             });
+             return { cart: updatedCart };
+           } else {
+-            // remove item from cart
++            //Remove item from cart
+             const filteredCart = state.cart.filter(
+               (cartItem) => cartItem.id !== item.id
+             );
+@@ -71,10 +69,12 @@
+     { name: "cart-store" }
+   )
+ );
++
+ type ThemeState = {
+   mode: "light" | "dark";
+   toggleMode: (theme: "light" | "dark") => void;
+ };
++
+ export const useThemeStore = create<ThemeState>()(
+   persist(
+     (set) => ({
+Index: app/dashboard/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { PrismaClient } from \"@prisma/client\";\nimport { getServerSession } from \"next-auth/next\";\nimport { authOptions } from \"@/pages/api/auth/[...nextauth]\";\nimport formatPrice from \"@/util/PriceFormat\";\nimport Image from \"next/image\";\n\nconst revalidate = 0;\nconst fetchOrders = async () => {\n  const prisma = new PrismaClient();\n  const user = await getServerSession(authOptions);\n  if (!user) {\n    return null;\n  }\n  const orders = await prisma.order.findMany({\n    where: { userId: user?.user?.id, status: \"complete\" },\n    include: { products: true },\n  });\n  return orders;\n};\nexport default async function Dashboard() {\n  const orders = await fetchOrders();\n  if (orders === null) {\n    return <h1>Not Logged In</h1>;\n  }\n  if (orders.length === 0) {\n    return <h1>No Orders</h1>;\n  }\n\n  return (\n    <div>\n      <div>\n        {orders.map((order) => (\n          <div\n            className=\"rounded-lg p-8 my-4 space-y-2 bg-base-200\"\n            key={order.id}\n          >\n            <h2 className=\"text-xs font-medium\">Order Reference: {order.id}</h2>\n\n            <p className=\"text-xs\">\n              Status:{\" \"}\n              <span\n                className={`${\n                  order.status === \"complete\" ? \"bg-teal-500\" : \"bg-orange-500\"\n                } text-white px-2 py-1 rounded-md mx-2 px-2 text-xs`}\n              >\n                {order.status}\n              </span>\n            </p>\n            <p className=\"text-xs\">\n              Time: {order.createdDate.toLocaleString()}\n            </p>\n\n            <div className=\"text-sm lg:flex items-center gap-2\">\n              {order.products.map((product) => (\n                <div className=\"py-2\" key={product.id}>\n                  <h2 className=\"py-2\">{product.name}</h2>\n                  <div className=\"flex items-baseline gap-4\">\n                    <Image\n                      src={product.image!}\n                      width={36}\n                      height={36}\n                      alt={product.name}\n                      priority={true}\n                      className=\"w-auto\"\n                    />\n                    <p>{formatPrice(product.unit_amount)}</p>\n                    <p>Quantity: {product.quantity}</p>\n                  </div>\n                  <p className=\"font-medium py-2\">\n                    Total: {formatPrice(order.amount)}\n                  </p>\n                </div>\n              ))}\n            </div>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/dashboard/page.tsx b/app/dashboard/page.tsx
+--- a/app/dashboard/page.tsx	
++++ b/app/dashboard/page.tsx	
+@@ -1,10 +1,11 @@
+ import { PrismaClient } from "@prisma/client";
+-import { getServerSession } from "next-auth/next";
++import { getServerSession } from "next-auth";
+ import { authOptions } from "@/pages/api/auth/[...nextauth]";
+ import formatPrice from "@/util/PriceFormat";
+ import Image from "next/image";
+ 
+-const revalidate = 0;
++export const revalidate = 0;
++
+ const fetchOrders = async () => {
+   const prisma = new PrismaClient();
+   const user = await getServerSession(authOptions);
+@@ -17,40 +18,42 @@
+   });
+   return orders;
+ };
++
+ export default async function Dashboard() {
+   const orders = await fetchOrders();
+-  if (orders === null) {
+-    return <h1>Not Logged In</h1>;
+-  }
++  if (orders === null)
++    return <div>You need to be logged in to view your orders</div>;
+   if (orders.length === 0) {
+-    return <h1>No Orders</h1>;
+-  }
+-
++    return (
++      <div>
++        <h1>No orders placed</h1>
++      </div>
++    );
++  }
+   return (
+     <div>
+       <div>
+         {orders.map((order) => (
+           <div
+-            className="rounded-lg p-8 my-4 space-y-2 bg-base-200"
+             key={order.id}
++            className="rounded-lg p-8 my-4 space-y-2 bg-base-200"
+           >
+-            <h2 className="text-xs font-medium">Order Reference: {order.id}</h2>
+-
++            <h2 className="text-xs font-medium">Order reference: {order.id}</h2>
+             <p className="text-xs">
+-              Status:{" "}
++              Status:
+               <span
+                 className={`${
+                   order.status === "complete" ? "bg-teal-500" : "bg-orange-500"
+-                } text-white px-2 py-1 rounded-md mx-2 px-2 text-xs`}
++                } text-white py-1 rounded-md px-2 mx-2 text-xs`}
+               >
+                 {order.status}
+               </span>
+             </p>
++
+             <p className="text-xs">
+-              Time: {order.createdDate.toLocaleString()}
++              Time: {new Date(order.createdDate).toString()}
+             </p>
+-
+-            <div className="text-sm lg:flex items-center gap-2">
++            <div className="text-sm lg:flex items-center  gap-4">
+               {order.products.map((product) => (
+                 <div className="py-2" key={product.id}>
+                   <h2 className="py-2">{product.name}</h2>
+@@ -66,12 +69,12 @@
+                     <p>{formatPrice(product.unit_amount)}</p>
+                     <p>Quantity: {product.quantity}</p>
+                   </div>
+-                  <p className="font-medium py-2">
+-                    Total: {formatPrice(order.amount)}
+-                  </p>
+-                </div>
+-              ))}
+-            </div>
++                </div>
++              ))}
++            </div>
++            <p className="font-medium py-2">
++              Total: {formatPrice(order.amount)}
++            </p>
+           </div>
+         ))}
+       </div>
+Index: app/components/Hydrate.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\";\nimport { ReactNode, useEffect, useState } from \"react\";\nimport { useThemeStore } from \"@/store\";\n\nexport default function Hydrate({ children }: { children: ReactNode }) {\n  const [isHydrated, setIsHydrated] = useState(false);\n  const themeStore = useThemeStore();\n\n  // wait till nextjs rehydration completes\n  useEffect(() => {\n    setIsHydrated(true);\n  }, []);\n  return (\n    <>\n      {isHydrated ? (\n        <body className=\"px-4 lg:px-48\" data-theme={themeStore.mode}>\n          {children}\n        </body>\n      ) : (\n        <body></body>\n      )}\n    </>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/components/Hydrate.tsx b/app/components/Hydrate.tsx
+--- a/app/components/Hydrate.tsx	
++++ b/app/components/Hydrate.tsx	
+@@ -1,19 +1,22 @@
+ "use client";
+-import { ReactNode, useEffect, useState } from "react";
++
+ import { useThemeStore } from "@/store";
++import { ReactNode, useEffect, useState } from "react";
+ 
+ export default function Hydrate({ children }: { children: ReactNode }) {
+   const [isHydrated, setIsHydrated] = useState(false);
+   const themeStore = useThemeStore();
+-
+-  // wait till nextjs rehydration completes
++  //Wait till Nextjs rehydration completes
+   useEffect(() => {
+     setIsHydrated(true);
+   }, []);
+   return (
+     <>
+       {isHydrated ? (
+-        <body className="px-4 lg:px-48" data-theme={themeStore.mode}>
++        <body
++          className="px-4 lg:px-48 font-roboto"
++          data-theme={themeStore.mode}
++        >
+           {children}
+         </body>
+       ) : (
+Index: app/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import Stripe from 'stripe';\nimport Product from './components/Product';\n\nconst getProducts = async () => {\n  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {\n    apiVersion: '2022-11-15',\n  });\n  const products = await stripe.products.list();\n  const productWithPrices = await Promise.all(\n    products.data.map(async (product) => {\n      const prices = await stripe.prices.list({ product: product.id });\n      const features = product.metadata.features || '';\n      return {\n        id: product.id,\n        name: product.name,\n        unit_amount: prices.data[0].unit_amount,\n        image: product.images[0],\n        currency: prices.data[0].currency,\n        description: product.description,\n        metadata: { features },\n      };\n    }),\n  );\n  return productWithPrices;\n};\n\nexport default async function Home() {\n  const products = await getProducts();\n  console.log(products);\n\n  return (\n    <main className='grid grid-cols-fluid gap-12'>\n      {products.map((product) => (\n        <Product {...product} key={product.id} />\n      ))}\n    </main>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/page.tsx b/app/page.tsx
+--- a/app/page.tsx	
++++ b/app/page.tsx	
+@@ -1,38 +1,41 @@
+-import Stripe from 'stripe';
+-import Product from './components/Product';
++import Image from "next/image";
++import formatPrice from "@/util/PriceFormat";
++import { ProductType } from "@/types/ProductType";
++import Link from "next/link";
+ 
+-const getProducts = async () => {
+-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+-    apiVersion: '2022-11-15',
+-  });
+-  const products = await stripe.products.list();
+-  const productWithPrices = await Promise.all(
+-    products.data.map(async (product) => {
+-      const prices = await stripe.prices.list({ product: product.id });
+-      const features = product.metadata.features || '';
+-      return {
+-        id: product.id,
+-        name: product.name,
+-        unit_amount: prices.data[0].unit_amount,
+-        image: product.images[0],
+-        currency: prices.data[0].currency,
+-        description: product.description,
+-        metadata: { features },
+-      };
+-    }),
+-  );
+-  return productWithPrices;
+-};
+-
+-export default async function Home() {
+-  const products = await getProducts();
+-  console.log(products);
++export default function Product({
++  name,
++  image,
++  unit_amount,
++  id,
++  description,
++  metadata,
++}: ProductType) {
++  const { features } = metadata;
+ 
+   return (
+-    <main className='grid grid-cols-fluid gap-12'>
+-      {products.map((product) => (
+-        <Product {...product} key={product.id} />
+-      ))}
+-    </main>
++    <Link
++      href={{
++        pathname: `/product/${id}`,
++        query: { name, image, unit_amount, id, description, features },
++      }}
++    >
++      <div>
++        <Image
++          src={image}
++          alt={name}
++          width={800}
++          height={800}
++          className="w-full h-96 object-cover rounded-lg"
++          priority={true}
++        />
++        <div className="font-medium py-2">
++          <h1>{name}</h1>
++          <h2 className="text-sm text-primary">
++            {unit_amount !== null ? formatPrice(unit_amount) : "N/A"}
++          </h2>
++        </div>
++      </div>
++    </Link>
+   );
+ }
+Index: app/components/Checkout.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use-client\";\n\nimport OrderAnimation from \"../components/OrderAnimation\";\nimport { motion } from \"framer-motion\";\n\nimport { loadStripe, StripeElementsOptions } from \"@stripe/stripe-js\";\nimport { Elements } from \"@stripe/react-stripe-js\";\nimport { useCartStore } from \"@/store\";\nimport { useState, useEffect } from \"react\";\nimport { useRouter } from \"next/navigation\";\nimport CheckoutForm from \"./CheckoutForm\";\nimport { useThemeStore } from \"@/store\";\n\nconst stripePromise = loadStripe(\n  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!\n);\n\nexport default function Checkout() {\n  const cartStore = useCartStore();\n  const router = useRouter();\n  const [clientSecret, setClientSecret] = useState(\"\");\n  const themeStore = useThemeStore();\n  const [stripeTheme, setStripeTheme] = useState<\n    \"flat\" | \"stripe\" | \"night\" | \"none\"\n  >(\"stripe\");\n\n  useEffect(() => {\n    // set stripe theme\n    if (themeStore.mode === \"dark\") {\n      setStripeTheme(\"night\");\n    } else {\n      setStripeTheme(\"stripe\");\n    }\n    // create a payment intent as soon as page loads up\n    fetch(\"/api/create-payment-intent\", {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({\n        items: cartStore.cart,\n        payment_intent_id: cartStore.paymentIntent,\n      }),\n    })\n      .then((res) => {\n        if (res.status === 403) {\n          return router.push(\"/api/auth/signin\");\n        }\n        return res.json();\n      })\n      .then((data) => {\n        setClientSecret(data.paymentIntent.client_secret);\n        cartStore.setPaymentIntent(data.paymentIntent.id);\n      });\n  }, []);\n\n  const options: StripeElementsOptions = {\n    clientSecret,\n    appearance: {\n      theme: stripeTheme,\n      labels: \"floating\",\n    },\n  };\n\n  return (\n    <div>\n      {!clientSecret && <OrderAnimation />}\n      {clientSecret && (\n        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>\n          <Elements options={options} stripe={stripePromise}>\n            <CheckoutForm clientSecret={clientSecret} />\n          </Elements>\n        </motion.div>\n      )}\n    </div>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/components/Checkout.tsx b/app/components/Checkout.tsx
+--- a/app/components/Checkout.tsx	
++++ b/app/components/Checkout.tsx	
+@@ -1,7 +1,4 @@
+-"use-client";
+-
+-import OrderAnimation from "../components/OrderAnimation";
+-import { motion } from "framer-motion";
++"use client";
+ 
+ import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
+ import { Elements } from "@stripe/react-stripe-js";
+@@ -9,6 +6,8 @@
+ import { useState, useEffect } from "react";
+ import { useRouter } from "next/navigation";
+ import CheckoutForm from "./CheckoutForm";
++import OrderAnimation from "./OrderAnimation";
++import { motion } from "framer-motion";
+ import { useThemeStore } from "@/store";
+ 
+ const stripePromise = loadStripe(
+@@ -25,13 +24,13 @@
+   >("stripe");
+ 
+   useEffect(() => {
+-    // set stripe theme
+-    if (themeStore.mode === "dark") {
+-      setStripeTheme("night");
++    //Set the theme of stripe
++    if (themeStore.mode === "light") {
++      setStripeTheme("stripe");
+     } else {
+-      setStripeTheme("stripe");
++      setStripeTheme("night");
+     }
+-    // create a payment intent as soon as page loads up
++    //Create a paymentIntent as soon as the page loads up
+     fetch("/api/create-payment-intent", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"b2ad446d-6816-43dc-9488-95760cf8acf6\" name=\"Changes\" comment=\"\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/next.config.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/next.config.js\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/package.json\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/package.json\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"TypeScript File\" />\n        <option value=\"TypeScript JSX File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitToolBoxStore\">\n    <option name=\"recentBranches\">\n      <RecentBranches>\n        <option name=\"branchesForRepo\">\n          <list>\n            <RecentBranchesForRepo>\n              <option name=\"branches\">\n                <list>\n                  <RecentBranch>\n                    <option name=\"branchName\" value=\"main\" />\n                    <option name=\"lastUsedInstant\" value=\"1682476653\" />\n                  </RecentBranch>\n                  <RecentBranch>\n                    <option name=\"branchName\" value=\"30.quick-fixes\" />\n                    <option name=\"lastUsedInstant\" value=\"1682475649\" />\n                  </RecentBranch>\n                  <RecentBranch>\n                    <option name=\"branchName\" value=\"29.more-fonts\" />\n                    <option name=\"lastUsedInstant\" value=\"1682398423\" />\n                  </RecentBranch>\n                  <RecentBranch>\n                    <option name=\"branchName\" value=\"28.stripe-darkmode\" />\n                    <option name=\"lastUsedInstant\" value=\"1682397661\" />\n                  </RecentBranch>\n                  <RecentBranch>\n                    <option name=\"branchName\" value=\"27.dark-light-mode\" />\n                    <option name=\"lastUsedInstant\" value=\"1682308657\" />\n                  </RecentBranch>\n                </list>\n              </option>\n              <option name=\"repositoryRootUrl\" value=\"file://$PROJECT_DIR$\" />\n            </RecentBranchesForRepo>\n          </list>\n        </option>\n      </RecentBranches>\n    </option>\n  </component>\n  <component name=\"MacroExpansionManager\">\n    <option name=\"directoryName\" value=\"7ktbdbj9\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2ODQrNjKIs72iGDRYLfaCRPSsNf\" />\n  <component name=\"ProjectLevelVcsManager\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"showLibraryContents\" value=\"true\" />\n    <option name=\"showMembers\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"WebServerToolWindowFactoryState\": \"false\",\n    \"git-widget-placeholder\": \"main\",\n    \"last_opened_file_path\": \"/Users/rob/Desktop/Next/FullStackNext/next-ecommerce\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"prettierjs.PrettierConfiguration.Package\": \"/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier\",\n    \"settings.editor.selected.configurable\": \"preferences.pluginManager\",\n    \"ts.external.directory.path\": \"/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"b2ad446d-6816-43dc-9488-95760cf8acf6\" name=\"Changes\" comment=\"\" />\n      <created>1681092870580</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1681092870580</updated>\n      <workItem from=\"1681092871771\" duration=\"197000\" />\n      <workItem from=\"1681097626188\" duration=\"31000\" />\n      <workItem from=\"1681097662058\" duration=\"1770000\" />\n      <workItem from=\"1682047330697\" duration=\"2870000\" />\n      <workItem from=\"1682051807987\" duration=\"2006000\" />\n      <workItem from=\"1682136056831\" duration=\"4964000\" />\n      <workItem from=\"1682295075807\" duration=\"2955000\" />\n      <workItem from=\"1682306097191\" duration=\"2911000\" />\n      <workItem from=\"1682394535303\" duration=\"5713000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -6,8 +6,12 @@
+   <component name="ChangeListManager">
+     <list default="true" id="b2ad446d-6816-43dc-9488-95760cf8acf6" name="Changes" comment="">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/components/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Checkout.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/components/Hydrate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/Hydrate.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store.ts" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -23,6 +27,11 @@
+     </option>
+   </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="25.daisy-ui-implementation" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="GitToolBoxStore">
+@@ -73,25 +82,25 @@
+     <option name="showLibraryContents" value="true" />
+     <option name="showMembers" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "WebServerToolWindowFactoryState": "false",
+-    "git-widget-placeholder": "main",
+-    "last_opened_file_path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "prettierjs.PrettierConfiguration.Package": "/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier",
+-    "settings.editor.selected.configurable": "preferences.pluginManager",
+-    "ts.external.directory.path": "/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;last_opened_file_path&quot;: &quot;/Users/rob/Desktop/Next/FullStackNext/next-ecommerce&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/rob/.nvm/versions/node/v19.4.0/lib/node_modules/prettier&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
++    &quot;ts.external.directory.path&quot;: &quot;/Users/rob/Desktop/Next/FullStackNext/next-ecommerce/node_modules/typescript/lib&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+@@ -109,6 +118,7 @@
+       <workItem from="1682295075807" duration="2955000" />
+       <workItem from="1682306097191" duration="2911000" />
+       <workItem from="1682394535303" duration="5713000" />
++      <workItem from="1682738013003" duration="442000" />
+     </task>
+     <servers />
+   </component>
